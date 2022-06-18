@@ -4,7 +4,6 @@ import {Tabs} from 'react-native-collapsible-tab-view';
 import {useStore} from '../../global/gloablProvider';
 import {useSocket} from '../../realTime/socketContextProvider';
 import {useChatStore} from '../store/chatStoreProvider';
-import MessagesRendererRecycler from './messagesRendererRecyle';
 import MessageEach from './messages';
 import {nothingToFind} from '../../nothingToFind/nothingToFind';
 import {sendFirstRoomMessage} from '../store/storeHelper';
@@ -156,53 +155,44 @@ const MessagesRender = props => {
   }, []);
 
   return (
-    <>
-      {renderPropsMemo?.useRecyclerRenderer === true ? (
-        <MessagesRendererRecycler
-          data={renderPropsMemo?.messages}
-          initialRenderIndex={0}
-        />
-      ) : (
-        <FlatListType
-          ref={e => {
-            forwardRef.current = e;
-            chatStore?.setMessagesRendererRef(e);
-          }}
-          data={renderPropsMemo?.messages}
-          extraData={renderPropsMemo?.messages}
-          onScroll={handleOnScroll}
-          inverted={true}
-          keyExtractor={(item, index) => item?._id.toString()}
-          CellRendererComponent={renderIndexPath}
-          onEndReached={getMoreMessages}
-          scrollEventThrottle={100}
-          onViewableItemsChanged={onViewableItemsChanged}
-          viewabilityConfig={_viewabilityConfig}
-          ListEmptyComponent={renderListEmptyComponent}
-          initialNumToRender={8}
-          maxToRenderPerBatch={2}
-          onEndReachedThreshold={0.5}
-          {...{
-            ...renderPropsMemo?.flatlistProps,
-            ...{
-              contentContainerStyle: {
-                paddingBottom: 20,
-                paddingTop: 20,
-                ...renderPropsMemo?.flatlistProps.contentContainerStyle,
-              },
-            },
-          }}
-          keyboardDismissMode="interactive"
-          automaticallyAdjustContentInsets={false}
-          contentInsetAdjustmentBehavior="never"
-          maintainVisibleContentPosition={{
-            minIndexForVisible: 0,
-            autoscrollToTopThreshold: 100,
-          }}
-          automaticallyAdjustKeyboardInsets={true}
-        />
-      )}
-    </>
+    <FlatListType
+      ref={e => {
+        forwardRef.current = e;
+        chatStore?.setMessagesRendererRef(e);
+      }}
+      data={renderPropsMemo?.messages}
+      extraData={renderPropsMemo?.messages}
+      onScroll={handleOnScroll}
+      inverted={true}
+      keyExtractor={(item, index) => item?._id.toString()}
+      CellRendererComponent={renderIndexPath}
+      onEndReached={getMoreMessages}
+      scrollEventThrottle={100}
+      onViewableItemsChanged={onViewableItemsChanged}
+      viewabilityConfig={_viewabilityConfig}
+      ListEmptyComponent={renderListEmptyComponent}
+      initialNumToRender={8}
+      maxToRenderPerBatch={2}
+      onEndReachedThreshold={0.5}
+      {...{
+        ...renderPropsMemo?.flatlistProps,
+        ...{
+          contentContainerStyle: {
+            paddingBottom: 20,
+            paddingTop: 20,
+            ...renderPropsMemo?.flatlistProps.contentContainerStyle,
+          },
+        },
+      }}
+      keyboardDismissMode="interactive"
+      automaticallyAdjustContentInsets={false}
+      contentInsetAdjustmentBehavior="never"
+      maintainVisibleContentPosition={{
+        minIndexForVisible: 0,
+        autoscrollToTopThreshold: 100,
+      }}
+      automaticallyAdjustKeyboardInsets={true}
+    />
   );
 };
 export default React.memo(MessagesRender);
